@@ -1,0 +1,97 @@
+<html>
+    <head>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <style>
+        </style>
+        
+    </head>
+
+    <body>
+        <div id="posts"></div>
+
+        
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-auth.js"></script>
+        <script>
+             let userid;
+             var firebaseConfig = {
+                apiKey: "AIzaSyD-3h6lfab3mP5Qdhy5ser3wUdH8k7fF7U",
+                authDomain: "project1-d5434.firebaseapp.com",
+                databaseURL: "https://project1-d5434.firebaseio.com",
+                projectId: "project1-d5434",
+                storageBucket: "project1-d5434.appspot.com",
+                messagingSenderId: "1035093859939",
+                appId: "1:1035093859939:web:637ed330927bad29236256",
+                measurementId: "G-99E92MZGPG"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            firebase.analytics();
+            const db = firebase.firestore();
+            firebase.auth().onAuthStateChanged((user)=> {
+              if (user) {
+                    // User is signed in.
+            //        let email = user.email;
+            //        let emailVerified = user.emailVerified;
+                  userid = user.uid;
+            //        let providerData = user.providerData;
+                  console.log(userid)
+                  createposts()
+              } else {
+                  console.log('not signed in')
+                    // User is signed out.
+              }
+            });
+            function done(){
+                console.log(string)
+                document.getElementById("posts").innerHTML=string;
+                    
+            }
+            function createposts(){
+                let homelist=[];
+                db.collection("users").doc(userid).collection("Senior Homes").get().then((querySnapshot)=>{
+                    querySnapshot.forEach(function(doc) {
+                        homelist.push(doc.data()["home"])
+
+                    });
+                }).then(()=>{
+                    console.log(homelist)
+                    console.log(homelist.length)
+                    for(i=0;i<homelist.length;i++){
+                        var count=0;
+                        var string="";
+                        console.log(i)
+                        db.collection("Posts").doc("s").collection(homelist[i]).get().then((querySnapshot)=>{
+                            console.log(i)
+                            querySnapshot.forEach((doc)=>{
+                                count++;
+                                //console.log(count)
+                                
+                            })
+                        }).then(()=>{
+
+                            string=string+"<div class='container'> <div class='card-panel grey lighten-5 z-depth-1'><h5 style='color: #2A2B41'>"+homelist[i]+"| "+count+" Patients Unoccupied | <a class='waves-effect waves-light btn-small' style='background-color: #2A2B41'><i class='material-icons right'>schedule</i>More Info</a></h5></div></div>"
+                            //console.log(i)
+                            //console.log(i-(homelist.length-1))
+                            if(i==homelist.length-1){
+                                done()
+                            }
+
+
+                        })
+                    }
+                    
+                })
+                
+                
+            }
+            
+            
+        
+        </script>
+        
+    </body>
+</html>
