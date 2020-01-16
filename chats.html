@@ -1,0 +1,44 @@
+<html>
+    <head>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <style>
+        </style>
+        
+    </head>
+
+    <body>
+        <nav>
+            <div class="nav-wrapper">
+              <a href="#" class="brand-logo right">Logo</a>
+              <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li><a href="posts.html">Posts</a></li>
+                <li><a href="profilepage.html">Profile</a></li>
+                <li><a href="chats.html">Chats</a></li>
+              </ul>
+            </div>
+        </nav>
+        
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-auth.js"></script>
+        <script>
+             var firebaseConfig = {
+                apiKey: "AIzaSyD-3h6lfab3mP5Qdhy5ser3wUdH8k7fF7U",
+                authDomain: "project1-d5434.firebaseapp.com",
+                databaseURL: "https://project1-d5434.firebaseio.com",
+                projectId: "project1-d5434",
+                storageBucket: "project1-d5434.appspot.com",
+                messagingSenderId: "1035093859939",
+                appId: "1:1035093859939:web:637ed330927bad29236256",
+                measurementId: "G-99E92MZGPG"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            firebase.analytics();
+            const db = firebase.firestore();
+        </script>
+        
+    </body>
+</html>
