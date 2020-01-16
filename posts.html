@@ -2,12 +2,31 @@
     <head>
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         <style>
         </style>
         
     </head>
 
     <body>
+        <ul id="slide-out" class="sidenav">
+    <li><div class="user-view">
+      <div class="background">
+        <!-- <img src="images/office.jpg">
+      </div>
+      <a href="#user"><img class="circle" src="images/yuna.jpg"></a> -->
+      <a href="#name"><span class="white-text name">John Doe</span></a>
+      <a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
+    </div></li>
+    <li><a href="mission.html">Our Mission</a></li>
+    <li><a href="posts.html">Posts</a></li>
+    <li><a href="additionalinfo.html">Additional Information</a></li>
+    <li><a href="#!">Chats</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Profile</a></li>
+    <li><a class="waves-effect" href="profilepage.html">Your Account</a></li>
+  </ul>
+  <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">Activate Sidenav</i></a>
         <div id="posts"></div>
 
         
@@ -16,6 +35,13 @@
         <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-firestore.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-auth.js"></script>
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems, {
+      inDuration:800,
+      outDuration:800
+    });
+     });
              let userid;
              var firebaseConfig = {
                 apiKey: "AIzaSyD-3h6lfab3mP5Qdhy5ser3wUdH8k7fF7U",
@@ -45,49 +71,74 @@
                     // User is signed out.
               }
             });
-            function done(){
-                console.log(string)
-                document.getElementById("posts").innerHTML=string;
-                    
-            }
-            function createposts(){
+        function done(string){
+            document.getElementById("posts").innerHTML=string
+        }
+        function write(list1){
+            console.log("hello")
                 let homelist=[];
-                db.collection("users").doc(userid).collection("Senior Homes").get().then((querySnapshot)=>{
-                    querySnapshot.forEach(function(doc) {
+                var string;
+                var count;
+                console.log(userid)
+                db.collection("users").doc("jl0EPbtxHce3j8knKPP6pOPOhV13").collection("Senior Homes").get().then((querySnapshot)=>{
+                    querySnapshot.forEach((doc)=> {
+                        console.log("hello")
                         homelist.push(doc.data()["home"])
-
+                        //console.log(homelist)
                     });
                 }).then(()=>{
-                    console.log(homelist)
-                    console.log(homelist.length)
                     for(i=0;i<homelist.length;i++){
-                        var count=0;
-                        var string="";
                         console.log(i)
-                        db.collection("Posts").doc("s").collection(homelist[i]).get().then((querySnapshot)=>{
-                            console.log(i)
-                            querySnapshot.forEach((doc)=>{
-                                count++;
-                                //console.log(count)
-                                
-                            })
-                        }).then(()=>{
-
-                            string=string+"<div class='container'> <div class='card-panel grey lighten-5 z-depth-1'><h5 style='color: #2A2B41'>"+homelist[i]+"| "+count+" Patients Unoccupied | <a class='waves-effect waves-light btn-small' style='background-color: #2A2B41'><i class='material-icons right'>schedule</i>More Info</a></h5></div></div>"
-                            //console.log(i)
-                            //console.log(i-(homelist.length-1))
-                            if(i==homelist.length-1){
-                                done()
+                        for(j=0;j<list1.length;j++){
+                            if(homelist[i]==list1[j]['home']){
+                                if(string==undefined){
+                                    string="";
+                                }
+                                string=string+"<div class='container'> <div class='card-panel grey lighten-5 z-depth-1'><h5 style='color: #2A2B41'>"+homelist[i]+" | "+list1[j]['num']+" Patients Unoccupied | <a class='waves-effect waves-light btn-small' style='background-color: #2A2B41'><i class='material-icons right'>schedule</i>More Info</a></h5></div></div>"
+                                if(i==homelist.length-1){
+                                    done(string)
+                                }
                             }
 
-
-                        })
+                        }
                     }
+                })
+            
+        }
+        function createposts(){
+            
+            var list1=[];
+            var count;
+            db.collection("Posts").get().then((dataget)=>{
+                dataget.forEach((doc)=>{
+                    count=0;
+                    //console.log(doc.id)
+                    //home.push(doc.id)
+                    db.collection("Posts").doc(doc.id).collection("s").get().then((query)=>{
+                        //num.push(query.size);
+                        count=query.size;
+                    }).then(()=>{
+                        //console.log(num)
+                        list1.push({home:doc.id, num:count})
+                    })
                     
                 })
-                
-                
-            }
+            }).then(()=>{
+                //console.log(list1)
+                write(list1)
+                //console.log(home)
+                //console.log(num)
+            })
+            db.collection("Posts").get().then((query)=>{
+                query.forEach((doc)=>{
+                    //console.log(doc.id)
+                })
+            })
+        
+        
+            
+        
+        }
             
             
         
