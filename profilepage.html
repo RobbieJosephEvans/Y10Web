@@ -2,6 +2,10 @@
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-auth.js"></script>
     </head>
     <body>
         <ul id="slide-out" class="sidenav">
@@ -22,6 +26,14 @@
     <li><a class="waves-effect" href="profilepage.html">Your Account</a></li>
   </ul>
   <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">Activate Sidenav</i></a>
+        <div>
+        <p id='name'></p>
+        <p id='birthd'></p>
+        <p id='live'></p>
+        <p id='description'></p>
+        </div>
+        <button onclick="changep()">Edit Profile</button>
+        <button onclick="changes()">Change Senior Homes</button>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.sidenav');
@@ -30,10 +42,53 @@
       outDuration:800
     });
      });
-        
     
+    var firebaseConfig = {
+                apiKey: "AIzaSyD-3h6lfab3mP5Qdhy5ser3wUdH8k7fF7U",
+                authDomain: "project1-d5434.firebaseapp.com",
+                databaseURL: "https://project1-d5434.firebaseio.com",
+                projectId: "project1-d5434",
+                storageBucket: "project1-d5434.appspot.com",
+                messagingSenderId: "1035093859939",
+                appId: "1:1035093859939:web:637ed330927bad29236256",
+                measurementId: "G-99E92MZGPG"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            firebase.analytics();
+            const db = firebase.firestore();
+            
+            firebase.auth().onAuthStateChanged((user)=> {
+              if (user) {
+                    // User is signed in.
+            //        let email = user.email;
+            //        let emailVerified = user.emailVerified;
+                  userid = user.uid;
+            //        let providerData = user.providerData;
+                  console.log(userid)
+                  getData();
+              } else {
+                  console.log('not signed in')
+                    // User is signed out.
+              }
+            });
     
-        
+            function getData(){
+            console.log(userid)
+            db.collection("users").doc(userid).collection("profile").doc("info").get().then((dataget1)=>{
+                dataget=dataget1.data()
+                document.getElementById("name").innerHTML=dataget['first']+" "+dataget['last'];
+                document.getElementById("birthd").innerHTML=dataget['age'];
+                document.getElementById("live").innerHTML=dataget['address'];
+                document.getElementById("description").innerHTML=dataget['descrip'];
+            });
+        }
+        function changep(){
+            window.open("profilechange.html","_parent")
+        }
+        function changes(){
+            window.open("seniorhomechange.html","_parent")
+        }
     </script>
         
         
