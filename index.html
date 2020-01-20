@@ -15,7 +15,8 @@
         <button onclick="logIn()" class="waves-effect waves-light btn">Log in</button>
         <br>
         <button onclick="signUp()" class="waves-effect waves-light btn">Sign up</button>
-        
+        <br>
+        <p id="errors"></p>
         <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-firestore.js"></script>
@@ -35,8 +36,7 @@
             firebase.initializeApp(firebaseConfig);
             firebase.analytics();
             const db = firebase.firestore();
-            const emailInput = document.getElementById("email");
-            const passwordInput = document.getElementById("password");
+            
             firebase.auth().onAuthStateChanged((user)=> {
               if (user) {
                     // User is signed in.
@@ -50,7 +50,8 @@
                     // User is signed out.
               }
             });
-            
+            const emailInput = document.getElementById("email");
+            const passwordInput = document.getElementById("password");
             function signUp(){
                 email=emailInput.value;
                 password=passwordInput.value;
@@ -60,6 +61,7 @@
                 }).catch((error)=> {
                     var errorCode = error.code;
                     var errorMessage = error.message;
+                    document.getElementById("errors").innerHTML=errorMessage;
                     console.error(errorMessage)
                 });
             }
@@ -73,6 +75,7 @@
                 }).catch((error)=> {
                     var errorCode = error.code;
                     var errorMessage = error.message;
+                    document.getElementById("errors").innerHTML=errorMessage;
                     console.error(errorMessage)
                 });
             }
